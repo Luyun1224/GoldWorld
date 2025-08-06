@@ -1,0 +1,365 @@
+import React, { useState } from 'react';
+import { 
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, 
+    LineChart, Line, PieChart, Pie, Cell, Sector 
+} from 'recharts';
+
+// --- 資料整理 ---
+// 根據您提供的圖片手工整理，並將相似項目歸類以便於分析。
+const financialData = [
+  {
+    month: '114年2月',
+    income: 144669, expense: 196523, balance: 608928,
+    incomeDetails: [
+      { name: '管理費', value: 71787 }, { name: '基地台收入', value: 36000 },
+      { name: '車管費', value: 14400 }, { name: '網路費收入', value: 3000 },
+      { name: '定存利息', value: 1532 }, { name: '磁扣', value: 150 },
+    ],
+    expenseDetails: [
+      { name: '物業管理費', value: 104000 }, { name: '維修工程款', value: 20300 },
+      { name: '電費', value: 17011 }, { name: '清潔員薪資', value: 10500 },
+      { name: '出席費', value: 10000 }, { name: '電梯維護', value: 6000 },
+      { name: '消防維護', value: 4000 }, { name: '行政雜支', value: 3612 },
+      { name: '監視器維護', value: 2500 }, { name: '垃圾清運', value: 2800 },
+      { name: '網路費支出', value: 800 },
+    ],
+  },
+  {
+    month: '114年3月',
+    income: 249297, expense: 224959, balance: 633266,
+    incomeDetails: [
+      { name: '管理費', value: 120500 }, { name: '基地台收入', value: 36000 },
+      { name: '車管費', value: 21860 }, { name: '廣告費', value: 18000 },
+      { name: '網路費收入', value: 5400 }, { name: '定存利息', value: 1532 },
+      { name: '磁扣', value: 150 },
+    ],
+    expenseDetails: [
+      { name: '物業管理費', value: 104000 }, { name: '防水工程', value: 37000 },
+      { name: '電費', value: 15792 }, { name: '清潔員薪資', value: 10500 },
+      { name: '電梯維護', value: 6000 }, { name: '消防維護', value: 4000 },
+      { name: '機械車位維護', value: 3150 }, { name: '行政雜支', value: 3917 },
+      { name: '監視器維護', value: 2500 }, { name: '網路費支出', value: 800 },
+      { name: '估價師費', value: 502 },
+    ],
+  },
+  {
+    month: '114年4月',
+    income: 171343, expense: 165778, balance: 638831,
+    incomeDetails: [
+      { name: '管理費', value: 132456 }, { name: '基地台收入', value: 18000 },
+      { name: '車管費', value: 10800 }, { name: '定存利息', value: 532 },
+    ],
+    expenseDetails: [
+      { name: '物業管理費', value: 104000 }, { name: '電費', value: 15182 },
+      { name: '管委會用品', value: 9555 }, { name: '清潔員薪資', value: 10500 },
+      { name: '電梯維護', value: 6000 }, { name: '消防維護', value: 4000 },
+      { name: '行政雜支', value: 3686 }, { name: '監視器維護', value: 2500 },
+      { name: '網路費支出', value: 800 },
+    ],
+  },
+  {
+    month: '114年5月',
+    income: null, expense: null, balance: null,
+    incomeDetails: [], expenseDetails: [],
+  },
+  {
+    month: '114年6月',
+    income: 233894, expense: 261597, balance: 613663,
+    incomeDetails: [
+      { name: '管理費', value: 116895 }, { name: '基地台收入', value: 36000 },
+      { name: '車管費', value: 10800 }, { name: '廣告費', value: 18000 },
+      { name: '銀行利息', value: 2117 }, { name: '磁扣', value: 50 },
+    ],
+    expenseDetails: [
+      { name: '物業管理費', value: 107000 }, { name: '回收場修繕', value: 45700 },
+      { name: '電費', value: 16324 }, { name: '清潔員薪資', value: 10500 },
+      { name: '端午節禮金', value: 8000 }, { name: '電梯維護', value: 6000 },
+      { name: '消防維護', value: 4000 }, { name: '行政雜支', value: 3694 },
+      { name: '監視器維護', value: 2500 }, { name: '物業費差額', value: 3000 },
+      { name: '公共意外險', value: 2779 }, { name: '電眼更新', value: 2800 },
+      { name: '網路費支出', value: 800 },
+    ],
+  },
+];
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#db7093', '#20b2aa'];
+
+// --- 組件 ---
+
+const formatCurrency = (value) => {
+    if (value === null || value === undefined) return 'N/A';
+    return `$${new Intl.NumberFormat('zh-TW').format(value)}`;
+};
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="p-4 bg-gray-800 bg-opacity-80 border border-gray-600 rounded-lg shadow-lg text-white">
+        <p className="label font-bold text-lg">{`${label}`}</p>
+        {payload.map((pld, index) => (
+             <p key={index} style={{ color: pld.color }}>
+                {`${pld.name}: ${formatCurrency(pld.value)}`}
+             </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
+const StatCard = ({ title, value, change, changeType, icon }) => (
+  <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg flex items-center justify-between transition-transform transform hover:scale-105">
+    <div>
+      <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</p>
+      <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
+      {change && (
+        <p className={`text-xs mt-1 ${changeType === 'increase' ? 'text-green-500' : 'text-red-500'}`}>
+          {change}
+        </p>
+      )}
+    </div>
+    <div className={`text-3xl p-3 rounded-full ${changeType === 'increase' ? 'bg-green-100 dark:bg-green-900 text-green-500' : 'bg-red-100 dark:bg-red-900 text-red-500'}`}>
+      {icon}
+    </div>
+  </div>
+);
+
+const renderActiveShape = (props) => {
+  const RADIAN = Math.PI / 180;
+  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent } = props;
+  const sin = Math.sin(-RADIAN * midAngle);
+  const cos = Math.cos(-RADIAN * midAngle);
+  const sx = cx + (outerRadius + 10) * cos;
+  const sy = cy + (outerRadius + 10) * sin;
+  const mx = cx + (outerRadius + 30) * cos;
+  const my = cy + (outerRadius + 30) * sin;
+  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+  const ey = my;
+  const textAnchor = cos >= 0 ? 'start' : 'end';
+
+  return (
+    <g>
+      <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius} startAngle={startAngle} endAngle={endAngle} fill={fill} />
+      <Sector cx={cx} cy={cy} startAngle={startAngle} endAngle={endAngle} innerRadius={outerRadius + 6} outerRadius={outerRadius + 10} fill={fill} />
+      <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
+      <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
+      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333" className="dark:fill-gray-200 text-xs">{`${payload.name}`}</text>
+      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999" className="text-xs">
+        {`(${(percent * 100).toFixed(2)}%)`}
+      </text>
+    </g>
+  );
+};
+
+const DetailsPieChart = ({ data, title, previousData, comparisonMonthName }) => {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const onPieEnter = (_, index) => setActiveIndex(index);
+    
+    return (
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg h-full flex flex-col">
+            <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">{title}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center flex-grow">
+                 <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                        <Pie activeIndex={activeIndex} activeShape={renderActiveShape} data={data} cx="50%" cy="50%" innerRadius={60} outerRadius={80} fill="#8884d8" dataKey="value" onMouseEnter={onPieEnter}>
+                            {data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
+                        </Pie>
+                    </PieChart>
+                </ResponsiveContainer>
+                <div className="overflow-y-auto max-h-[300px]">
+                    <table className="w-full text-sm">
+                        <thead>
+                           <tr className="text-left text-xs text-gray-500 dark:text-gray-400">
+                               <th className="p-2 font-normal">項目</th>
+                               <th className="p-2 font-normal text-right">金額</th>
+                               {previousData && <th className="p-2 font-normal text-right">{comparisonMonthName ? `與 ${comparisonMonthName.replace('114年', '')} 比較` : '與上期比較'}</th>}
+                           </tr>
+                        </thead>
+                        <tbody>
+                        {data.sort((a, b) => b.value - a.value).map((entry, index) => {
+                            const prevItem = previousData ? previousData.find(p => p.name === entry.name) : null;
+                            const prevValue = prevItem ? prevItem.value : 0;
+                            const change = entry.value - prevValue;
+
+                            return (
+                                <tr key={`item-${index}`} className="border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+                                    <td className="p-2 flex items-center"><span className="w-3 h-3 rounded-full mr-2 shrink-0" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>{entry.name}</td>
+                                    <td className="p-2 text-right font-mono">{formatCurrency(entry.value)}</td>
+                                    {previousData && (
+                                        <td className="p-2 text-right font-mono text-xs">
+                                            {prevValue === 0 && change > 0 ? (
+                                                <span className="text-blue-500">新增</span>
+                                            ) : change !== 0 ? (
+                                                <span className={change > 0 ? 'text-red-500' : 'text-green-500'}>
+                                                    {change > 0 ? '▲' : '▼'} {formatCurrency(Math.abs(change))}
+                                                </span>
+                                            ) : (
+                                                <span className="text-gray-400">-</span>
+                                            )}
+                                        </td>
+                                    )}
+                                </tr>
+                            );
+                        })}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const FinancialAdvisor = () => (
+    <div className="my-12">
+        <h2 className="text-3xl font-bold text-center mb-2 text-gray-900 dark:text-white">
+            <span className="text-blue-500">AI 財務長</span> 決策建議
+        </h2>
+        <p className="text-center text-gray-500 dark:text-gray-400 mb-8">基於 114年2月-6月 財務數據之分析與策略建議</p>
+
+        <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 className="text-xl font-bold mb-4 text-blue-600 dark:text-blue-400 border-b-2 border-blue-200 pb-2">財務總評</h3>
+                    <p className="text-gray-600 dark:text-gray-300 mb-6">本大樓整體財務狀況尚屬穩健，備用金維持在 $600,000 以上水平，足以應付日常營運。然而，**收入來源相對單一，且易受大型、非預期性維修支出影響**，導致單月現金流出現較大赤字，需建立更強的財務韌性。</p>
+                    <h3 className="text-xl font-bold mb-4 text-red-600 dark:text-red-400 border-b-2 border-red-200 pb-2">潛在問題與風險</h3>
+                    <ul className="space-y-3 list-disc list-inside text-gray-600 dark:text-gray-300">
+                        <li><strong className="text-red-500">缺乏資本利得帳戶：</strong>重大修繕（如防水、外牆）直接由管理費帳戶支出，嚴重衝擊當月財務。6月份的「回收場修繕」($45,700) 即為一例，這類支出若頻繁發生將快速消耗結餘。</li>
+                        <li><strong className="text-red-500">支出審核機制不明：</strong>部分支出項目如「行政雜支」、「管委會用品」($9,555) 金額偏高且名目籠統，可能存在浪費或未經妥善議價的空間。</li>
+                        <li><strong className="text-red-500">合約依賴度高：</strong>物業管理費佔總支出極高比例，若服務品質與價格不符，將成為最大財務負擔。</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400 border-b-2 border-green-200 pb-2">具體行動建議</h3>
+                    <div className="space-y-4">
+                        <div>
+                            <h4 className="font-semibold text-gray-800 dark:text-gray-100">🎯 支出優化 (Cost Down)</h4>
+                            <ul className="text-sm list-disc list-inside text-gray-600 dark:text-gray-300 pl-2">
+                                <li><strong>檢討非必要支出：</strong>建議重新評估「出席費」($10,000) 及「端午節禮金」($8,000) 的發放標準與金額，此類非固定支出應視當年度財務狀況彈性調整。</li>
+                                <li><strong>細化雜項支出：</strong>要求「行政雜支」需逐項列報，找出可節省項目（如改用電子通知減少紙張、文具統一採購等）。</li>
+                                <li><strong>重新議價或招標：</strong>針對「物業管理」、「電梯維護」等長期合約，建議每2-3年重新評估市場行情並公開招標，或與現有廠商協商優惠方案。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="font-semibold text-gray-800 dark:text-gray-100">📈 收入開源 (Revenue Up)</h4>
+                             <ul className="text-sm list-disc list-inside text-gray-600 dark:text-gray-300 pl-2">
+                                <li><strong>活化公共空間：</strong>評估將會議室、頂樓平台等閒置空間，在不影響住戶安寧的前提下，短租給外部單位（如瑜珈課、手作坊）的可能性。</li>
+                                <li><strong>擴大廣告版位：</strong>除了現有廣告收入，可評估電梯內、公佈欄等空間增加廣告版位的可行性，爭取更多元的廣告來源。</li>
+                            </ul>
+                        </div>
+                         <div>
+                            <h4 className="font-semibold text-gray-800 dark:text-gray-100">🏦 長期策略 (Long-term Strategy)</h4>
+                             <ul className="text-sm list-disc list-inside text-gray-600 dark:text-gray-300 pl-2">
+                                <li><strong>成立「公共基金」或「修繕基金」：</strong>此為最重要建議。應立即規劃從管理費提撥一定比例（如5%-10%）至獨立的修繕基金帳戶，專款專用，以應對未來可預見的大型修繕，避免衝擊日常營運資金。</li>
+                                <li><strong>推動節能措施：</strong>公共電費是重大開銷，建議研究將公共區域照明更換為LED燈具、加裝定時器等方案，長期來看能節省可觀費用。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+);
+
+
+// --- 主應用程式 ---
+export default function App() {
+  const validData = financialData.filter(d => d.balance !== null);
+  const [selectedMonth, setSelectedMonth] = useState(validData.slice(-1)[0].month);
+
+  const latestData = validData.slice(-1)[0];
+  const previousDataForStatCard = validData.slice(-2)[0];
+
+  const balanceChange = latestData.balance - previousDataForStatCard.balance;
+  const balanceChangeType = balanceChange >= 0 ? 'increase' : 'decrease';
+  const balanceChangeText = `vs ${previousDataForStatCard.month.replace('114年', '')}`;
+
+  const totalIncome = validData.reduce((acc, cur) => acc + (cur.income || 0), 0);
+  const totalExpense = validData.reduce((acc, cur) => acc + (cur.expense || 0), 0);
+  
+  const selectedIndex = financialData.findIndex(d => d.month === selectedMonth);
+  const selectedData = financialData[selectedIndex];
+  
+  // --- 新增邏輯：尋找上一個有效的月份進行比較 ---
+  let comparisonMonthData = null;
+  if (selectedIndex > 0) {
+    for (let i = selectedIndex - 1; i >= 0; i--) {
+      // 檢查該月份是否有數據 (以 balance 是否為 null 作為判斷基準)
+      if (financialData[i].balance !== null) {
+        comparisonMonthData = financialData[i];
+        break; // 找到後就跳出迴圈
+      }
+    }
+  }
+  // --- 邏輯結束 ---
+
+  return (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans p-4 sm:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto">
+        <header className="mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white text-center">金世界公寓大廈 財務報表分析</h1>
+          <p className="text-center text-gray-500 dark:text-gray-400 mt-2">期間：114年2月 - 114年6月 (註：缺少5月份資料)</p>
+        </header>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <StatCard 
+            title={`最新總結餘 (${latestData.month.replace('114年', '')})`} 
+            value={formatCurrency(latestData.balance)} 
+            change={`${balanceChange >= 0 ? '▲' : '▼'} ${formatCurrency(Math.abs(balanceChange))} ${balanceChangeText}`} 
+            changeType={balanceChangeType} 
+            icon="💰" 
+          />
+          <StatCard title="期間總收入" value={formatCurrency(totalIncome)} icon="📈" changeType="increase" />
+          <StatCard title="期間總支出" value={formatCurrency(totalExpense)} icon="📉" changeType="decrease" />
+          <StatCard title="期間淨結餘" value={formatCurrency(totalIncome-totalExpense)} changeType={(totalIncome-totalExpense) >= 0 ? 'increase' : 'decrease'} icon="⚖️" />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">每月收支比較</h2>
+            <ResponsiveContainer width="100%" height={300}><BarChart data={validData} margin={{ top: 5, right: 20, left: 30, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="rgba(128, 128, 128, 0.2)" /><XAxis dataKey="month" tick={{ fill: '#9ca3af' }} /><YAxis tickFormatter={(value) => `${value/1000}k`} tick={{ fill: '#9ca3af' }} /><Tooltip content={<CustomTooltip />} cursor={{fill: 'rgba(107, 114, 128, 0.1)'}} /><Legend /><Bar dataKey="income" fill="#4ade80" name="總收入" radius={[4, 4, 0, 0]} /><Bar dataKey="expense" fill="#f87171" name="總支出" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer>
+          </div>
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">總結餘趨勢</h2>
+            <ResponsiveContainer width="100%" height={300}><LineChart data={financialData} margin={{ top: 5, right: 20, left: 30, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="rgba(128, 128, 128, 0.2)" /><XAxis dataKey="month" tick={{ fill: '#9ca3af' }} /><YAxis tickFormatter={(value) => `${value/1000}k`} domain={['dataMin - 20000', 'dataMax + 20000']} tick={{ fill: '#9ca3af' }} /><Tooltip content={<CustomTooltip />} /><Legend /><Line type="monotone" dataKey="balance" name="總結餘" stroke="#38bdf8" strokeWidth={3} dot={{ r: 6 }} activeDot={{ r: 8 }} connectNulls /></LineChart></ResponsiveContainer>
+          </div>
+        </div>
+        
+        <FinancialAdvisor />
+
+        <div className="my-10">
+            <h2 className="text-2xl font-bold text-center mb-2 text-gray-900 dark:text-white">收支結構分析</h2>
+            <p className="text-center text-gray-500 dark:text-gray-400 mb-6">請選擇月份以查看詳細的收支結構與前期比較</p>
+            <div className="flex justify-center flex-wrap gap-2 mb-8">
+                {validData.map(item => (
+                    <button key={item.month} onClick={() => setSelectedMonth(item.month)} className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${selectedMonth === item.month ? 'bg-blue-500 text-white shadow-md' : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600'}`}>
+                        {item.month}
+                    </button>
+                ))}
+            </div>
+
+            {selectedData && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <DetailsPieChart 
+                        title={`${selectedData.month} 收入佔比`} 
+                        data={selectedData.incomeDetails} 
+                        previousData={comparisonMonthData ? comparisonMonthData.incomeDetails : null} 
+                        comparisonMonthName={comparisonMonthData ? comparisonMonthData.month : null}
+                    />
+                    <DetailsPieChart 
+                        title={`${selectedData.month} 支出佔比`} 
+                        data={selectedData.expenseDetails} 
+                        previousData={comparisonMonthData ? comparisonMonthData.expenseDetails : null} 
+                        comparisonMonthName={comparisonMonthData ? comparisonMonthData.month : null}
+                    />
+                </div>
+            )}
+        </div>
+        
+        <footer className="text-center mt-8 text-xs text-gray-400 dark:text-gray-500">
+            <p>此報表由 Gemini 基於您提供的圖片生成。</p>
+            <p>數據僅供參考，所有金額以原始財務報表為準。</p>
+        </footer>
+      </div>
+    </div>
+  );
+}
