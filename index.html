@@ -34,7 +34,7 @@
     <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <header class="mb-8">
             <h1 class="text-3xl sm:text-4xl font-bold text-white text-center">金世界公寓大廈 財務報表分析</h1>
-            <p class="text-center text-gray-400 mt-2">期間：114年2月 - 114年6月 (註：缺少5月份資料)</p>
+            <p id="report-period" class="text-center text-gray-400 mt-2">期間：114年2月 - 114年6月</p>
         </header>
 
         <!-- Stat Cards -->
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
         { month: '114年2月', income: 144669, expense: 196523, balance: 608928, incomeDetails: [{ name: '管理費', value: 71787 }, { name: '基地台收入', value: 36000 },{ name: '車管費', value: 14400 }, { name: '網路費收入', value: 3000 },{ name: '定存利息', value: 1532 }, { name: '磁扣', value: 150 },], expenseDetails: [{ name: '物業管理費', value: 104000 }, { name: '維修工程款', value: 20300 },{ name: '電費', value: 17011 }, { name: '清潔員薪資', value: 10500 },{ name: '出席費', value: 10000 }, { name: '電梯維護', value: 6000 },{ name: '消防維護', value: 4000 }, { name: '行政雜支', value: 3612 },{ name: '監視器維護', value: 2500 }, { name: '垃圾清運', value: 2800 },{ name: '網路費支出', value: 800 },],},
         { month: '114年3月', income: 249297, expense: 224959, balance: 633266, incomeDetails: [{ name: '管理費', value: 120500 }, { name: '基地台收入', value: 36000 },{ name: '車管費', value: 21860 }, { name: '廣告費', value: 18000 },{ name: '網路費收入', value: 5400 }, { name: '定存利息', value: 1532 },{ name: '磁扣', value: 150 },], expenseDetails: [{ name: '物業管理費', value: 104000 }, { name: '防水工程', value: 37000 },{ name: '電費', value: 15792 }, { name: '清潔員薪資', value: 10500 },{ name: '電梯維護', value: 6000 }, { name: '消防維護', value: 4000 },{ name: '機械車位維護', value: 3150 }, { name: '行政雜支', value: 3917 },{ name: '監視器維護', value: 2500 }, { name: '網路費支出', value: 800 },{ name: '估價師費', value: 502 },],},
         { month: '114年4月', income: 171343, expense: 165778, balance: 638831, incomeDetails: [{ name: '管理費', value: 132456 }, { name: '基地台收入', value: 18000 },{ name: '車管費', value: 10800 }, { name: '定存利息', value: 532 },], expenseDetails: [{ name: '物業管理費', value: 104000 }, { name: '電費', value: 15182 },{ name: '管委會用品', value: 9555 }, { name: '清潔員薪資', value: 10500 },{ name: '電梯維護', value: 6000 }, { name: '消防維護', value: 4000 },{ name: '行政雜支', value: 3686 }, { name: '監視器維護', value: 2500 },{ name: '網路費支出', value: 800 },],},
-        { month: '114年5月', income: null, expense: null, balance: null, incomeDetails: [], expenseDetails: [],},
+        { month: '114年5月', income: 169836, expense: 157301, balance: 641366, incomeDetails: [{ name: '管理費', value: 108104 }, { name: '基地台收入', value: 36000 }, { name: '車管費', value: 10800 }, { name: '網路費收入', value: 2100 }, { name: '廣告費', value: 300 }, { name: '定存利息', value: 1532 }], expenseDetails: [{ name: '物業管理費', value: 104000 }, { name: '電費', value: 16097 }, { name: '清潔員薪資', value: 10500 }, { name: '油漆防火門', value: 8000 }, { name: '電梯維護', value: 6000 }, { name: '消防維護', value: 4000 }, { name: '防火管理人年費', value: 3000 }, { name: '監視器維護', value: 2500 }, { name: '行政雜支', value: 2098 }, { name: '網路費支出', value: 800 }, { name: '電話費', value: 306 }] },
         { month: '114年6月', income: 233894, expense: 261597, balance: 613663, incomeDetails: [{ name: '管理費', value: 116895 }, { name: '基地台收入', value: 36000 },{ name: '車管費', value: 10800 }, { name: '廣告費', value: 18000 },{ name: '銀行利息', value: 2117 }, { name: '磁扣', value: 50 },], expenseDetails: [{ name: '物業管理費', value: 107000 }, { name: '回收場修繕', value: 45700 },{ name: '電費', value: 16324 }, { name: '清潔員薪資', value: 10500 },{ name: '端午節禮金', value: 8000 }, { name: '電梯維護', value: 6000 },{ name: '消防維護', value: 4000 }, { name: '行政雜支', value: 3694 },{ name: '監視器維護', value: 2500 }, { name: '物業費差額', value: 3000 },{ name: '公共意外險', value: 2779 }, { name: '電眼更新', value: 2800 },{ name: '網路費支出', value: 800 },],},
     ];
     const COLORS = ['#5470C6', '#91CC75', '#FAC858', '#EE6666', '#73C0DE', '#3BA272', '#FC8452', '#9A60B4', '#EA7CCC'];
@@ -96,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const monthSelector = document.getElementById('month-selector');
     const detailsView = document.getElementById('details-view');
     const advisorContainer = document.getElementById('financial-advisor');
+    const reportPeriodEl = document.getElementById('report-period');
 
     // --- 輔助函式 ---
     const formatCurrency = (value) => {
@@ -170,11 +171,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function renderAdvisor() {
+        const firstMonth = validData[0].month;
+        const lastMonth = validData[validData.length - 1].month;
+        
         advisorContainer.innerHTML = `
             <h2 class="text-3xl font-bold text-center mb-2 text-white">
                 <span class="text-cyan-400">AI 財務長</span> 決策建議
             </h2>
-            <p class="text-center text-gray-400 mb-8">基於 114年2月-6月 財務數據之分析與策略建議</p>
+            <p class="text-center text-gray-400 mb-8">基於 ${firstMonth} - ${lastMonth} 財務數據之分析與策略建議</p>
             <div class="bg-gray-900 p-8 rounded-2xl shadow-lg">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
@@ -360,8 +364,15 @@ document.addEventListener('DOMContentLoaded', function () {
         pieChart.setOption(pieOptions);
         window.addEventListener('resize', () => pieChart.resize());
     }
+    
+    function updateHeaders() {
+        const firstMonth = validData[0].month;
+        const lastMonth = validData[validData.length-1].month;
+        reportPeriodEl.textContent = `期間：${firstMonth} - ${lastMonth}`;
+    }
 
     // --- 初始化應用程式 ---
+    updateHeaders();
     renderStatCards();
     renderMainCharts();
     renderAdvisor();
