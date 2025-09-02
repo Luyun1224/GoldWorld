@@ -34,7 +34,7 @@
     <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <header class="mb-8">
             <h1 class="text-3xl sm:text-4xl font-bold text-white text-center">金世界公寓大廈 財務報表分析</h1>
-            <p id="report-period" class="text-center text-gray-400 mt-2">期間：114年2月 - 114年6月</p>
+            <p id="report-period" class="text-center text-gray-400 mt-2">期間：114年2月 - 114年7月</p>
         </header>
 
         <!-- Stat Cards -->
@@ -86,6 +86,33 @@ document.addEventListener('DOMContentLoaded', function () {
         { month: '114年4月', income: 171343, expense: 165778, balance: 638831, incomeDetails: [{ name: '管理費', value: 132456 }, { name: '基地台收入', value: 18000 },{ name: '車管費', value: 10800 }, { name: '定存利息', value: 532 },], expenseDetails: [{ name: '物業管理費', value: 104000 }, { name: '電費', value: 15182 },{ name: '管委會用品', value: 9555 }, { name: '清潔員薪資', value: 10500 },{ name: '電梯維護', value: 6000 }, { name: '消防維護', value: 4000 },{ name: '行政雜支', value: 3686 }, { name: '監視器維護', value: 2500 },{ name: '網路費支出', value: 800 },],},
         { month: '114年5月', income: 169836, expense: 157301, balance: 641366, incomeDetails: [{ name: '管理費', value: 108104 }, { name: '基地台收入', value: 36000 }, { name: '車管費', value: 10800 }, { name: '網路費收入', value: 2100 }, { name: '廣告費', value: 300 }, { name: '定存利息', value: 1532 }], expenseDetails: [{ name: '物業管理費', value: 104000 }, { name: '電費', value: 16097 }, { name: '清潔員薪資', value: 10500 }, { name: '油漆防火門', value: 8000 }, { name: '電梯維護', value: 6000 }, { name: '消防維護', value: 4000 }, { name: '防火管理人年費', value: 3000 }, { name: '監視器維護', value: 2500 }, { name: '行政雜支', value: 2098 }, { name: '網路費支出', value: 800 }, { name: '電話費', value: 306 }] },
         { month: '114年6月', income: 233894, expense: 261597, balance: 613663, incomeDetails: [{ name: '管理費', value: 116895 }, { name: '基地台收入', value: 36000 },{ name: '車管費', value: 10800 }, { name: '廣告費', value: 18000 },{ name: '銀行利息', value: 2117 }, { name: '磁扣', value: 50 },], expenseDetails: [{ name: '物業管理費', value: 107000 }, { name: '回收場修繕', value: 45700 },{ name: '電費', value: 16324 }, { name: '清潔員薪資', value: 10500 },{ name: '端午節禮金', value: 8000 }, { name: '電梯維護', value: 6000 },{ name: '消防維護', value: 4000 }, { name: '行政雜支', value: 3694 },{ name: '監視器維護', value: 2500 }, { name: '物業費差額', value: 3000 },{ name: '公共意外險', value: 2779 }, { name: '電眼更新', value: 2800 },{ name: '網路費支出', value: 800 },],},
+        {
+            month: '114年7月',
+            income: 305515,
+            expense: 162222,
+            balance: 756956,
+            incomeDetails: [
+                { name: '管理費', value: 247283 },
+                { name: '基地台收入', value: 36000 },
+                { name: '車管費', value: 13500 },
+                { name: '網路費收入', value: 7200 },
+                { name: '定存利息', value: 1532 }
+            ],
+            expenseDetails: [
+                { name: '物業管理費', value: 107000 },
+                { name: '電費', value: 18232 },
+                { name: '清潔員薪資', value: 10500 },
+                { name: 'B2消防管路垂配', value: 6000 },
+                { name: '電梯維護', value: 6000 },
+                { name: '消防維護', value: 4000 },
+                { name: '專案機械車位費用', value: 3150 },
+                { name: '管理室雜支', value: 2666 },
+                { name: '監視器維護', value: 2500 },
+                { name: '財委協助帳務費', value: 1000 },
+                { name: '網路費支出', value: 800 },
+                { name: '電話費', value: 374 }
+            ]
+        }
     ];
     const COLORS = ['#5470C6', '#91CC75', '#FAC858', '#EE6666', '#73C0DE', '#3BA272', '#FC8452', '#9A60B4', '#EA7CCC'];
     const validData = financialData.filter(d => d.balance !== null);
@@ -183,12 +210,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <h3 class="text-xl font-bold mb-4 text-cyan-400 border-b-2 border-cyan-800 pb-2">財務總評</h3>
-                        <p class="text-gray-300 mb-6">本大樓整體財務狀況尚屬穩健，備用金維持在 $600,000 以上水平，足以應付日常營運。然而，<strong class="text-amber-400">收入來源相對單一，且易受大型、非預期性維修支出影響</strong>，導致單月現金流出現較大赤字，需建立更強的財務韌性。</p>
+                        <p class="text-gray-300 mb-6">本期間財務狀況轉為穩健，因七月份管理費收入大幅增加，使備用金回升至 <strong class="text-green-400">$750,000</strong> 以上水平。然而，<strong class="text-amber-400">收入來源相對單一，且仍易受大型維修及季節性支出影響</strong>，需持續建立更強的財務韌性。</p>
                         <h3 class="text-xl font-bold mb-4 text-red-400 border-b-2 border-red-800 pb-2">潛在問題與風險</h3>
                         <ul class="space-y-3 list-disc list-inside text-gray-300">
-                            <li><strong class="text-red-400">缺乏資本利得帳戶：</strong>重大修繕（如防水、外牆）直接由管理費帳戶支出，嚴重衝擊當月財務。6月份的「回收場修繕」($45,700) 即為一例，這類支出若頻繁發生將快速消耗結餘。</li>
+                            <li><strong class="text-red-400">缺乏資本利得帳戶：</strong>重大修繕（如6月的回收場修繕、7月的消防管路工程）直接由管理費帳戶支出，易造成財務波動。</li>
+                            <li><strong class="text-red-400">季節性支出壓力：</strong>夏季電費仍是主要開銷之一（7月電費為 $18,232），凸顯了節能措施與預算規劃的重要性。</li>
                             <li><strong class="text-red-400">支出審核機制不明：</strong>部分支出項目如「行政雜支」、「管委會用品」($9,555) 金額偏高且名目籠統，可能存在浪費或未經妥善議價的空間。</li>
-                            <li><strong class="text-red-400">合約依賴度高：</strong>物業管理費佔總支出極高比例，若服務品質與價格不符，將成為最大財務負擔。</li>
                         </ul>
                     </div>
                     <div>
@@ -197,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <div>
                                 <h4 class="font-semibold text-gray-100">🎯 支出優化 (Cost Down)</h4>
                                 <ul class="text-sm list-disc list-inside text-gray-300 pl-2">
-                                    <li><strong>檢討非必要支出：</strong>建議重新評估「出席費」($10,000) 及「端午節禮金」($8,000) 的發放標準與金額，此類非固定支出應視當年度財務狀況彈性調整。</li>
+                                    <li><strong>檢討非必要支出：</strong>建議重新評估「出席費」及「節慶禮金/活動」的發放標準與金額，此類非固定支出應視當年度財務狀況彈性調整。</li>
                                     <li><strong>細化雜項支出：</strong>要求「行政雜支」需逐項列報，找出可節省項目（如改用電子通知減少紙張、文具統一採購等）。</li>
                                     <li><strong>重新議價或招標：</strong>針對「物業管理」、「電梯維護」等長期合約，建議每2-3年重新評估市場行情並公開招標。</li>
                                 </ul>
@@ -213,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <h4 class="font-semibold text-gray-100">🏦 長期策略 (Long-term Strategy)</h4>
                                 <ul class="text-sm list-disc list-inside text-gray-300 pl-2">
                                     <li><strong>成立「公共基金」或「修繕基金」：</strong>此為最重要建議。應立即規劃從管理費提撥一定比例（如5%-10%）至獨立的修繕基金帳戶，專款專用。</li>
-                                    <li><strong>推動節能措施：</strong>公共電費是重大開銷，建議研究將公共區域照明更換為LED燈具、加裝定時器等方案，長期來看能節省可觀費用。</li>
+                                    <li><strong>推動節能措施：</strong>公共電費是重大開銷，應立即研究將公共區域照明更換為LED燈具、加裝定時器等方案，以應對夏季用電高峰。</li>
                                 </ul>
                             </div>
                         </div>
@@ -383,3 +410,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </body>
 </html>
+
