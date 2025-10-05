@@ -34,7 +34,7 @@
     <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <header class="mb-8">
             <h1 class="text-3xl sm:text-4xl font-bold text-white text-center">金世界公寓大廈 財務報表分析</h1>
-            <p id="report-period" class="text-center text-gray-400 mt-2">期間：114年2月 - 114年7月</p>
+            <p id="report-period" class="text-center text-gray-400 mt-2">期間：114年2月 - 114年8月</p>
         </header>
 
         <!-- Stat Cards -->
@@ -111,6 +111,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 { name: '財委協助帳務費', value: 1000 },
                 { name: '網路費支出', value: 800 },
                 { name: '電話費', value: 374 }
+            ]
+        },
+        {
+            month: '114年8月',
+            income: 107807,
+            expense: 154339,
+            balance: 710424,
+            incomeDetails: [
+                { name: '管理費', value: 53879 },
+                { name: '基地台收入', value: 36000 },
+                { name: '車管費', value: 7200 },
+                { name: '網路費收入', value: 4500 },
+                { name: '定存利息', value: 1532 },
+                { name: '磁扣', value: 450 }
+            ],
+            expenseDetails: [
+                { name: '物業管理費', value: 107000 },
+                { name: '電費', value: 19518 },
+                { name: '清潔員薪資', value: 10500 },
+                { name: '電梯維護', value: 6000 },
+                { name: '消防維護', value: 4000 },
+                { name: '行政雜支', value: 2630 },
+                { name: '監視器維護', value: 2500 },
+                { name: '財委協助帳務費', value: 1000 },
+                { name: '網路費支出', value: 800 },
+                { name: '電話費', value: 391 }
             ]
         }
     ];
@@ -210,12 +236,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <h3 class="text-xl font-bold mb-4 text-cyan-400 border-b-2 border-cyan-800 pb-2">財務總評</h3>
-                        <p class="text-gray-300 mb-6">本期間財務狀況轉為穩健，因七月份管理費收入大幅增加，使備用金回升至 <strong class="text-green-400">$750,000</strong> 以上水平。然而，<strong class="text-amber-400">收入來源相對單一，且仍易受大型維修及季節性支出影響</strong>，需持續建立更強的財務韌性。</p>
+                        <p class="text-gray-300 mb-6">本期間財務狀況呈現波動，8月份因管理費收入大幅減少，導致備用金水位從高點回落至 <strong class="text-amber-400">$710,000</strong> 左右。這凸顯了<strong class="text-red-400">社區財務對單月管理費收取狀況的依賴性極高</strong>，缺乏穩定緩衝機制。夏季電費仍是主要開銷，需持續關注。</p>
                         <h3 class="text-xl font-bold mb-4 text-red-400 border-b-2 border-red-800 pb-2">潛在問題與風險</h3>
                         <ul class="space-y-3 list-disc list-inside text-gray-300">
-                            <li><strong class="text-red-400">缺乏資本利得帳戶：</strong>重大修繕（如6月的回收場修繕、7月的消防管路工程）直接由管理費帳戶支出，易造成財務波動。</li>
-                            <li><strong class="text-red-400">季節性支出壓力：</strong>夏季電費仍是主要開銷之一（7月電費為 $18,232），凸顯了節能措施與預算規劃的重要性。</li>
-                            <li><strong class="text-red-400">支出審核機制不明：</strong>部分支出項目如「行政雜支」、「管委會用品」($9,555) 金額偏高且名目籠統，可能存在浪費或未經妥善議價的空間。</li>
+                            <li><strong class="text-red-400">收入來源單一且不穩定：</strong>管理費是絕對主要收入，但8月份收入僅 $53,879，遠低於前幾個月，造成財務缺口。顯示催繳機制或住戶繳費狀況可能存在問題。</li>
+                            <li><strong class="text-red-400">缺乏資本利得帳戶：</strong>重大修繕（如6月的回收場修繕）直接由管理費帳戶支出，易造成財務波動，此問題持續存在。</li>
+                            <li><strong class="text-red-400">季節性支出壓力：</strong>8月電費（$19,518）持續處於高點，凸顯了節能措施與預算規劃的重要性。</li>
+                            <li><strong class="text-red-400">支出審核機制不明：</strong>部分支出項目如「行政雜支」、「財委協助帳務費」雖金額不高，但若無明確標準，長期可能累積成不必要開銷。</li>
                         </ul>
                     </div>
                     <div>
@@ -224,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <div>
                                 <h4 class="font-semibold text-gray-100">🎯 支出優化 (Cost Down)</h4>
                                 <ul class="text-sm list-disc list-inside text-gray-300 pl-2">
-                                    <li><strong>檢討非必要支出：</strong>建議重新評估「出席費」及「節慶禮金/活動」的發放標準與金額，此類非固定支出應視當年度財務狀況彈性調整。</li>
+                                    <li><strong>檢討非必要支出：</strong>建議重新評估「財委協助帳務費」的發放標準與金額，此類非固定支出應視當年度財務狀況彈性調整。</li>
                                     <li><strong>細化雜項支出：</strong>要求「行政雜支」需逐項列報，找出可節省項目（如改用電子通知減少紙張、文具統一採購等）。</li>
                                     <li><strong>重新議價或招標：</strong>針對「物業管理」、「電梯維護」等長期合約，建議每2-3年重新評估市場行情並公開招標。</li>
                                 </ul>
@@ -232,14 +259,14 @@ document.addEventListener('DOMContentLoaded', function () {
                             <div>
                                 <h4 class="font-semibold text-gray-100">📈 收入開源 (Revenue Up)</h4>
                                 <ul class="text-sm list-disc list-inside text-gray-300 pl-2">
+                                    <li><strong>強化管理費催收：</strong>必須立即檢討8月份管理費收入驟降原因，並建立更有效的催收流程，確保社區主要現金流穩定。</li>
                                     <li><strong>活化公共空間：</strong>評估將會議室、頂樓平台等閒置空間，在不影響住戶安寧的前提下，短租給外部單位（如瑜珈課、手作坊）的可能性。</li>
-                                    <li><strong>擴大廣告版位：</strong>除了現有廣告收入，可評估電梯內、公佈欄等空間增加廣告版位的可行性，爭取更多元的廣告來源。</li>
                                 </ul>
                             </div>
                             <div>
                                 <h4 class="font-semibold text-gray-100">🏦 長期策略 (Long-term Strategy)</h4>
                                 <ul class="text-sm list-disc list-inside text-gray-300 pl-2">
-                                    <li><strong>成立「公共基金」或「修繕基金」：</strong>此為最重要建議。應立即規劃從管理費提撥一定比例（如5%-10%）至獨立的修繕基金帳戶，專款專用。</li>
+                                    <li><strong>成立「公共基金」或「修繕基金」：</strong>此為最重要建議。應立即規劃從管理費提撥一定比例（如5%-10%）至獨立的修繕基金帳戶，專款專用，避免因大型修繕影響日常營運。</li>
                                     <li><strong>推動節能措施：</strong>公共電費是重大開銷，應立即研究將公共區域照明更換為LED燈具、加裝定時器等方案，以應對夏季用電高峰。</li>
                                 </ul>
                             </div>
@@ -410,4 +437,3 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </body>
 </html>
-
